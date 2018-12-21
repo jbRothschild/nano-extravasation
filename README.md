@@ -10,7 +10,11 @@ Program that runs a diffusive simulation in vasculature data from tumors
 
 Jupyter notebook for visualtization
 
+Jupyter notebook for running simulation???
+
 Add more features? customization (through parameters.py?)
+
+Extending this to current work
 
 ## Theory
 
