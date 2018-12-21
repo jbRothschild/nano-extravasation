@@ -56,4 +56,4 @@ def main(model, **data):
     print toc - tic, "sec for total simulation."
 
 if __name__ == "__main__":
-    main(model=vars(args)['m'], **data)
+    main(model=vars(args)['m'])
