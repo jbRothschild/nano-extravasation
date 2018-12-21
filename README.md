@@ -8,7 +8,7 @@ Program that runs a diffusive simulation in vasculature data from tumors
 .sh and .exe files to run simulations
   -> explain how code works
 
-Jupyter program for visualtization
+Jupyter notebook for visualtization
 
 Add more features? customization (through parameters.py?)
 
