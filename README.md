@@ -12,6 +12,6 @@ Jupyter notebook for visualtization
 
 Add more features? customization (through parameters.py?)
 
-##Theory
+## Theory
 
 ## How code works
