@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 from parameters import DIF_COEF, VISC, TOT_TIME, TIME_STEP, GLOB_DX, GLOB_DY, GLOB_DZ, LOAD_DIR, DOMAIN, VESSEL, HOLES, GEN_HOLES, SAVE_TIME, SIM_DIR
 
 class Model(object):
-    def __init__( self,  sim_dir=SIM_DIR, load_dir=LOAD_DIR, d_co=DIF_COEF, vis=VISC, tot_time=TOT_TIME, dt=TIME_STEP, dx=GLOB_DX, dy=GLOB_DY, dz=GLOB_DZ, number_holes=5000, domain=DOMAIN, vessel=VESSEL, holes=HOLES gen_holes=GEN_HOLES, update_time=9999999, save_data_time=SAVE_TIME, gap_mult=1, *args):
+    def __init__( self,  sim_dir=SIM_DIR, load_dir=LOAD_DIR, d_co=DIF_COEF, vis=VISC, tot_time=TOT_TIME, dt=TIME_STEP, dx=GLOB_DX, dy=GLOB_DY, dz=GLOB_DZ, number_holes=5000, domain=DOMAIN, vessel=VESSEL, holes=HOLES, gen_holes=GEN_HOLES, update_time=9999999, save_data_time=SAVE_TIME, gap_mult=1, *args):
         self.d_co = d_co; self.vis = vis #Diffusion coefficient and viscosity
         self.total_time = tot_time #total time for simulation
         self.dt = dt; self.dx = dx; self.dy = dy; self.dz = dz #metric
@@ -122,7 +122,7 @@ class Model(object):
         self.flow_loc = self.flow_loc[ minimum:maximum, minimum:maximum, minimum:maximum ]
         self.source_loc = self.source_loc[ minimum:maximum, minimum:maximum, minimum:maximum ]
         self.holes_loc = self.holes_loc[ minimum:maximum, minimum:maximum, minimum:maximum ]
-        self.ijk = ( np.linspace(1, sel-T-stackf.diffusion_loc.shape[0]-2, self.diffusion_loc.shape[0]-2) ).astype(int)
+        self.ijk = ( np.linspace(1, self.diffusion_loc.shape[0]-2, self.diffusion_loc.shape[0]-2) ).astype(int)
         return 0
 
     def initialize( self, minimum=0, maximum=None ):
@@ -143,14 +143,14 @@ class Model(object):
         self.solution[self.ijk,:,:] += self.diffusion_loc[self.ijk,:,:]*( self.d_co*self.dt*self.diffusion_loc[self.ijk+1,:,:]*( un[self.ijk+1,:,:]-un[self.ijk,:,:] ) )/(self.dx**2)
 
         self.solution[self.ijk,:,:] += self.diffusion_loc[self.ijk,:,:]*( self.d_co*self.dt*self.diffusion_loc[self.ijk-1,:,:]*( un[self.ijk-1,:,:]-un[self.ijk,:,:] ) )/(self.dx**2)
--T-stack
+
         self.solution[:,self.ijk,:] += self.diffusion_loc[:,self.ijk,:]*( self.d_co*self.dt*self.diffusion_loc[:,self.ijk+1,:]*( un[:,self.ijk+1,:]-un[:,self.ijk,:] ) )/(self.dy**2)
 
         self.solution[:,self.ijk,:] += self.diffusion_loc[:,self.ijk,:]*( self.d_co*self.dt*self.diffusion_loc[:,self.ijk-1,:]*( un[:,self.ijk-1,:]-un[:,self.ijk,:] ) )/(self.dy**2)
 
         self.solution[:,:,self.ijk] += self.diffusion_loc[:,:,self.ijk]*( self.d_co*self.dt*self.diffusion_loc[:,:,self.ijk+1]*( un[:,:,self.ijk+1]-un[:,:,self.ijk] ) )/(self.dz**2)
 
-        self.solution[:,:,self.ijk] += sel-T-stackf.diffusion_loc[:,:,self.ijk]*( self.d_co*self.dt*self.diffusion_loc[:,:,self.ijk-1]*( un[:,:,self.ijk-1]-un[:,:,self.ijk] ) )/(self.dz**2)
+        self.solution[:,:,self.ijk] += self.diffusion_loc[:,:,self.ijk]*( self.d_co*self.dt*self.diffusion_loc[:,:,self.ijk-1]*( un[:,:,self.ijk-1]-un[:,:,self.ijk] ) )/(self.dz**2)
 
         #Periodic Boundary Conditions
         self.solution[0,:,:] += self.diffusion_loc[0,:,:]*( self.d_co*self.dt*self.diffusion_loc[1,:,:]*( un[1,:,:]-un[0,:,:] ) + self.d_co*self.dt*self.diffusion_loc[-1,::-1,::-1]*( un[-1,::-1,::-1]-un[0,:,:] ))/(self.dx**2)
@@ -159,7 +159,7 @@ class Model(object):
 
         self.solution[:,:,0] += self.diffusion_loc[:,:,0]*( self.d_co*self.dt*self.diffusion_loc[:,:,1]*( un[:,:,1]-un[:,:,0] ) + self.d_co*self.dt*self.diffusion_loc[::-1,::-1,-1]*( un[::-1,::-1,-1]-un[:,:,0] ))/(self.dz**2)
 
-        self.solution[-1,:,:] += self.diffusion_loc[-1,:,:]*( self.d_co*self.dt*self.diffusion_loc[-2,:,:]*( un[-2,:,:]-un[-1,:,:] ) + self.d_co*self.dt*self.diffusion_l-T-stackoc[0,::-1,::-1]*( un[0,::-1,::-1]-un[-1,:,:] ))/(self.dx**2)
+        self.solution[-1,:,:] += self.diffusion_loc[-1,:,:]*( self.d_co*self.dt*self.diffusion_loc[-2,:,:]*( un[-2,:,:]-un[-1,:,:] ) + self.d_co*self.dt*self.diffusion_loc[0,::-1,::-1]*( un[0,::-1,::-1]-un[-1,:,:] ))/(self.dx**2)
 
         self.solution[:,-1,:] += self.diffusion_loc[:,-1,:]*( self.d_co*self.dt*self.diffusion_loc[:,-2,:]*( un[:,-2,:]-un[:,-1,:] ) + self.d_co*self.dt*self.diffusion_loc[::-1,0,::-1]*( un[::-1,0,::-1]-un[:,-1,:] ))/(self.dy**2)
 
