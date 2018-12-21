@@ -1,0 +1,13 @@
+#ignore tif, pdf, npy and other files
+*.tif
+*.npy
+*.pdf
+*.pgf
+*.png
+*.pyc
+*.out
+#ignore folder ChanLab and others
+ChanLab*/
+data_old/
+/.project
+/.pydevproject
