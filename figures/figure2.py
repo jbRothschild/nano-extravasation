@@ -1,5 +1,4 @@
 import numpy as np
-import latex_plots as lp
 import matplotlib.pyplot as plt
 
 ###########################################################################

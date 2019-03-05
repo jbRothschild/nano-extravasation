@@ -17,7 +17,7 @@ def tif2npy(sim, filename, time):
     saveto = '../data/' + sim + '/diff_' + str(time) + 'sec'
     np.save(saveto, nanoP)
 
-def main(sim, run='', time = ''):
+def main(sim, time = ''):
     if time == '':
         time = np.load('../sim/' + sim + '/lastTime_seconds.npy')
 
@@ -27,13 +27,14 @@ def main(sim, run='', time = ''):
     colors_gradient = plt.cm.inferno(np.linspace(0,1,n))
 
     fig, ax = plt.subplots()
-    nanoP = np.load('../sim/' + sim +'/diff_' + str(time) + 'sec' + str(run) + '.npy')
+    nanoP = np.load('../sim/' + sim +'/diff_' + str(time) + 'sec' + '.npy')
     nanoP = nanoP/np.max(nanoP) #in case max in not concentration
 
+    nanoP[nanoP < 10**(-3)] = 10**(-3)
     downsize = 1
 
     cax = ax.contourf(range(0,np.shape(nanoP)[0],1)[::downsize], range(0,np.shape(nanoP)[1],1)[::downsize], nanoP[::downsize,::downsize], levels=np.logspace(-3, 0, 100), locator=mpl.ticker.LogLocator(50), cmap=plt.cm.inferno)
-    cbar = fig.colorbar(cax, ticks=[10**0, 10**(-3), 10**(-6), 10**(-9)])
+    cbar = fig.colorbar(cax, ticks=[10**0, 10**(-3)])
 
     #cbar.ax.set_ylabel(r'$Concentration$')
     for c in ax.collections:
@@ -42,11 +43,8 @@ def main(sim, run='', time = ''):
     ax.set_xlabel(r"$z$-direction ($\mu m$)")
     ax.set_ylabel(r"$y$-direction ($\mu m$)")
     ax.minorticks_off()
-    filename = sim + "_" + str(time) + str(run)
+    filename = "../sim/" + sim + "_" + str(time)
     plt.show()
 
-
-
 if __name__ == "__main__":
-    #main(simulation folder,)
-    main('data', run='_mphage_1800', time='2D10800.0')
+    main('parent_model_tumor160_stack2', time='2D1800.0')

@@ -5,10 +5,10 @@ import write_data as wd
 
 import matplotlib.pyplot as plt
 
-from parameters import DIF_COEF, VISC, TOT_TIME, TIME_STEP, GLOB_DX, GLOB_DY, GLOB_DZ, LOAD_DIR, DOMAIN, VESSEL, HOLES, GEN_HOLES, SAVE_TIME, SIM_DIR
+from parameters import DIF_COEF, VISC, TOT_TIME, TIME_STEP, GLOB_DX, GLOB_DY, GLOB_DZ, LOAD_DIR, DOMAIN, VESSEL, HOLES, GEN_HOLES, SAVE_TIME, SIM_DIR, GAP_MULT, NUM_HOLES
 
 class Model(object):
-    def __init__( self,  sim_dir=SIM_DIR, load_dir=LOAD_DIR, d_co=DIF_COEF, vis=VISC, tot_time=TOT_TIME, dt=TIME_STEP, dx=GLOB_DX, dy=GLOB_DY, dz=GLOB_DZ, number_holes=5000, domain=DOMAIN, vessel=VESSEL, holes=HOLES, gen_holes=GEN_HOLES, update_time=9999999, save_data_time=SAVE_TIME, gap_mult=1, *args):
+    def __init__( self,  sim_dir=SIM_DIR, load_dir=LOAD_DIR, d_co=DIF_COEF, vis=VISC, tot_time=TOT_TIME, dt=TIME_STEP, dx=GLOB_DX, dy=GLOB_DY, dz=GLOB_DZ, number_holes=NUM_HOLES, domain=DOMAIN, vessel=VESSEL, holes=HOLES, gen_holes=GEN_HOLES, update_time=9999999, save_data_time=SAVE_TIME, gap_mult=GAP_MULT, *args):
         self.d_co = d_co; self.vis = vis #Diffusion coefficient and viscosity
         self.total_time = tot_time #total time for simulation
         self.dt = dt; self.dx = dx; self.dy = dy; self.dz = dz #metric
@@ -30,17 +30,17 @@ class Model(object):
 
         self.update_time = update_time
 
-        if os.path.exists( self.sim_dir + "timepoint.npy" ): #If continuing simulation, reloads
-            self.time = np.load( self.sim_dir + "timepoint.npy" )
+        if os.path.exists( self.sim_dir + "/timepoint.npy" ): #If continuing simulation, reloads
+            self.time = np.load( self.sim_dir + "/timepoint.npy" )
         else:
             self.time = 0.0
-            np.save(self.sim_dir + "timepoint.npy", np.asarray(self.time))
+            np.save(self.sim_dir + "/timepoint.npy", np.asarray(self.time))
 
-        if os.path.exists( self.sim_dir + "time_sum.npy" ): #If continuing simulation, reloads
-            self.timeSum = np.load( self.sim_dir + "time_sum.npy" )
+        if os.path.exists( self.sim_dir + "/time_sum.npy" ): #If continuing simulation, reloads
+            self.timeSum = np.load( self.sim_dir + "/time_sum.npy" )
         else:
             self.timeSum = np.array( [[0],[0.0]] )
-            np.save( self.sim_dir + "time_sum.npy", self.timeSum )
+            np.save( self.sim_dir + "/time_sum.npy", self.timeSum )
 
     def unpack( self ):
         return self.d, self.d_co, self.time, self.dt, self.dx, self.dy, self.dz
@@ -189,11 +189,11 @@ class Model(object):
     #--------------SAVING-------------
 
     def save_sim( self ):
-        wd.save_run(self.time, self.solution, self.sim_dir, "timepoint.npy")
+        wd.save_run(self.time, self.solution, self.sim_dir, "/timepoint.npy")
         wd.save_run_2D(self.time, self.solution[self.solution.shape[0]/2,:,:], self.sim_dir)
         return 0
 
     def save_time_sum( self ):
         self.timeSum = np.append(self.timeSum,[[self.time],[np.sum( self.solution )]], axis=1)
-        np.save(self.sim_dir + "time_sum.npy", self.timeSum)
+        np.save(self.sim_dir + "/time_sum.npy", self.timeSum)
         print "         >> Sum this step", np.sum( self.timeSum[1,-1] )

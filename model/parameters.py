@@ -4,17 +4,19 @@ Units: seconds, micrometers
 """
 
 #IMAGE LOADING
-TUMOR_IMAGE = 160
-STACK = 2
+TUMOR_IMAGE = 160 # 158, 159 or 160
+STACK = 2 # 1, 2, 3 or 4
+NUM_HOLES = 5000 # anything you'd like really
 
 #FILES TO LOAD
-LOAD_DIR = "../extravasationfinalimgs/"
+LOAD_DIR = "../data/"
 DATA_NAME = "MSC" + str(TUMOR_IMAGE) + "-T-stack" + str(STACK) + "-Nov29-2018"
 
 DOMAIN = "tissue_boundary/" + DATA_NAME + "_isotissue_boundary.tif"
 VESSEL = "thresh_vessels/" + DATA_NAME + "_isothresh_vessels.tif"
 HOLES = "gaps_100x/" + DATA_NAME + "_isogaps_100x.tif"
-GEN_HOLES = "gaps_actual/" + DATA_NAME + "_isogaps_actual.tif"
+#GEN_HOLES = "gaps_actual/" + DATA_NAME + "_isogaps_actual.tif"
+GEN_HOLES = ""
 
 SIM_DIR = "../sim/parent_model_tumor" + str(TUMOR_IMAGE) + "_stack" + str(STACK)
 
@@ -34,4 +36,3 @@ else:
     GLOB_DY = 2.
     GLOB_DZ = 2.
 GAP_MULT = 1
-
