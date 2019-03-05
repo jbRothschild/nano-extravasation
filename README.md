@@ -26,7 +26,7 @@ This project has the following architecture:
 
 This repository does not contain any of the data that is necessary to run these simulation, you will have to create a '/data' directory as above and download the necessary files from [here](https://figshare.com/articles/Annotated_TEM_images_of_blood_vessels_in_tumours/7485770). You can do so manually (follow link, download extravasationfinalsimgs.zip and unzip the contents into the data folder as above) or if you are running a Linux based system simply run the `download_data.sh` script in terminal and it will take care of the download.
 
-For Windows users who want to use scripts, see below[^1].
+For Windows users who want to use scripts, see below [^1].
 
 I will not go into the details of how the code runs here, but will briefly explain how it works: models of diffusion are described in `/models`, each of them with the name `[something]_model.py`. These models are classes, in which the geometry of the problem is defined (boundaries, sources, sinks, etc.). For now, the physical dynamics that are described in these classes are diffusion, sinks, sources and different boundary conditions (Neumann, Dirichlet). The simulation is run in `/models/main.py` and certain time points of the simulations are saved in `/sim`.
 
@@ -54,7 +54,7 @@ Unless you have the proper support to run the scripts, you will have to run the 
 
 You do not need a full understanding of the code to customize certain parameters in the simulations in `/model/parameters.py`. Notably, to run any of the 12 different simulations that are in `/data`, you can change the tumor image (158,159,160) and the stack (1,2,3,4):
 
-~~~
+~~~python
 #IMAGE LOADING
 TUMOR_IMAGE = 160 # 158, 159 or 160
 STACK = 2 # 1, 2, 3 or 4
@@ -76,7 +76,7 @@ For now, all you need to do is run
 
 from the directory `/figures`. You need to specify which simulation you want to visualize in `/figures/figure1.py` in the line 50
 
-~~~
+~~~python
 main('parent_model_tumor160_stack2', time='2D1800.0')
 ~~~
 
